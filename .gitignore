@@ -6,3 +6,18 @@
 # Local tool state
 .claude/settings.local.json
 .code-review-graph/
+
+# Dependencies and build output
+/node_modules
+/.next/
+/out/
+/build
+/coverage
+*.tsbuildinfo
+next-env.d.ts
+
+# Misc
+.DS_Store
+*.pem
+npm-debug.log*
+.vercel
