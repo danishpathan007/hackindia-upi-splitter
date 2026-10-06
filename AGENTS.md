@@ -17,7 +17,7 @@ Prioritise a working demo over extra features.
 - Start local dev server: `npm run dev`
 - Build for submission: `npm run build`
 - Lint: `npm run lint`
-- There is no test script yet. Do not claim tests passed unless a test command is added.
+- Run tests: `npm test` (Vitest). Do not claim tests passed without running it.
 
 ## Code conventions
 - Use TypeScript types for props and data returned from helpers.
