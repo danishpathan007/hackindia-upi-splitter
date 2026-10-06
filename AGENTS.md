@@ -27,11 +27,19 @@ Prioritise a working demo over extra features.
 - Convert to rupees only at the UI boundary, using `formatRupees` from `lib/format.ts` (`₹500`, never `$500`).
 - Tests live next to the file they test, as `*.test.ts`.
 - Prefer clear variable names like `payerId`, `splitAmount`, and `settlements`.
+- Keep UI text simple for Indian college users.
+- Do not add paid services or external APIs unless asked.
 
 ## Git workflow
 - Check git status before changing files.
 - Keep changes focused on the requested task.
 - Do not edit generated files unless the task requires it.
+- For multi-file changes, propose a plan first.
+
+## Before committing
+- Run `npm test`, `npm run lint`, and `npm run build`.
+- Check `git diff --staged` and stage files by name, not `git add .`.
+- Mention any untested area in the commit message or PR notes.
 
 ## Environment
 - Environment variables are expected in `.env.local`.
