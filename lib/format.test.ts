@@ -17,4 +17,8 @@ describe("formatRupees", () => {
   test("formats zero", () => {
     expect(formatRupees(0)).toBe("₹0");
   });
+
+  test("puts the minus sign before the rupee symbol", () => {
+    expect(formatRupees(-5050)).toBe("-₹50.50");
+  });
 });

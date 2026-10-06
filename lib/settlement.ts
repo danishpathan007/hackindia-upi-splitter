@@ -22,14 +22,16 @@ export type Settlement = {
  * Works out who should pay whom so every member ends up even.
  * Each expense is split equally; leftover paise go one each to the
  * first members in splitAmong, so shares always add up to the expense.
+ * Throws if an expense has a non-integer or negative amount, an empty or
+ * duplicated splitAmong, or a member id that is not in members.
  */
 export function calculateSettlements(members: Member[], expenses: Expense[]): Settlement[] {
   // Positive balance: should receive money. Negative: owes money.
   const balances = new Map<string, number>(members.map((member) => [member.id, 0]));
 
   for (const expense of expenses) {
+    validateExpense(expense, balances);
     const memberCount = expense.splitAmong.length;
-    if (memberCount === 0) continue;
 
     const baseShare = Math.floor(expense.amountPaise / memberCount);
     const leftoverPaise = expense.amountPaise - baseShare * memberCount;
@@ -66,6 +68,31 @@ export function calculateSettlements(members: Member[], expenses: Expense[]): Se
   }
 
   return settlements;
+}
+
+function validateExpense(expense: Expense, balances: Map<string, number>) {
+  if (!Number.isInteger(expense.amountPaise) || expense.amountPaise < 0) {
+    throw new Error(
+      `Expense ${expense.id}: amountPaise must be a non-negative integer, got ${expense.amountPaise}`,
+    );
+  }
+  if (expense.splitAmong.length === 0) {
+    throw new Error(`Expense ${expense.id}: splitAmong must list at least one member`);
+  }
+  if (!balances.has(expense.payerId)) {
+    throw new Error(`Expense ${expense.id}: payer ${expense.payerId} is not in the group`);
+  }
+
+  const seen = new Set<string>();
+  for (const memberId of expense.splitAmong) {
+    if (!balances.has(memberId)) {
+      throw new Error(`Expense ${expense.id}: member ${memberId} is not in the group`);
+    }
+    if (seen.has(memberId)) {
+      throw new Error(`Expense ${expense.id}: member ${memberId} is listed twice in splitAmong`);
+    }
+    seen.add(memberId);
+  }
 }
 
 function addToBalance(balances: Map<string, number>, memberId: string, amountPaise: number) {

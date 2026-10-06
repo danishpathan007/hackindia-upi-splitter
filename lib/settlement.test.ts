@@ -38,3 +38,45 @@ describe("calculateSettlements", () => {
     expect(calculateSettlements(members, [])).toEqual([]);
   });
 });
+
+describe("calculateSettlements input checks", () => {
+  const validExpense: Expense = {
+    id: "e1",
+    payerId: "asha",
+    amountPaise: 90000,
+    splitAmong: ["asha", "ravi", "meera"],
+  };
+
+  test.each([
+    ["fractional paise", 1010.0000000000001],
+    ["negative amount", -500],
+  ])("rejects %s", (_, amountPaise) => {
+    expect(() => calculateSettlements(members, [{ ...validExpense, amountPaise }])).toThrow(
+      "amountPaise",
+    );
+  });
+
+  test("rejects an expense split among nobody", () => {
+    expect(() => calculateSettlements(members, [{ ...validExpense, splitAmong: [] }])).toThrow(
+      "splitAmong",
+    );
+  });
+
+  test("rejects the same member listed twice in one split", () => {
+    expect(() =>
+      calculateSettlements(members, [{ ...validExpense, splitAmong: ["ravi", "ravi", "asha"] }]),
+    ).toThrow("ravi");
+  });
+
+  test("rejects a payer who is not in the group", () => {
+    expect(() => calculateSettlements(members, [{ ...validExpense, payerId: "kiran" }])).toThrow(
+      "kiran",
+    );
+  });
+
+  test("rejects a split member who is not in the group", () => {
+    expect(() =>
+      calculateSettlements(members, [{ ...validExpense, splitAmong: ["asha", "kiran"] }]),
+    ).toThrow("kiran");
+  });
+});

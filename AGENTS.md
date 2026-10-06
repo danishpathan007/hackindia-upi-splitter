@@ -8,7 +8,7 @@ Prioritise a working demo over extra features.
 ## Stack
 - Next.js app using the app directory.
 - TypeScript for application code.
-- Prisma for database models and queries.
+- Prisma is planned but not installed yet. Do not add it unless asked.
 - UI components live in `components/`.
 - Shared helpers live in `lib/`.
 
@@ -23,7 +23,9 @@ Prioritise a working demo over extra features.
 - Use TypeScript types for props and data returned from helpers.
 - Keep React components small and readable.
 - Put expense calculation logic in `lib/settlement.ts`, not inside page components.
-- Use rupees for displayed amounts. Format as `₹500`, not `$500`.
+- Keep money amounts as integer paise internally (₹900 = 90000).
+- Convert to rupees only at the UI boundary, using `formatRupees` from `lib/format.ts` (`₹500`, never `$500`).
+- Tests live next to the file they test, as `*.test.ts`.
 - Prefer clear variable names like `payerId`, `splitAmount`, and `settlements`.
 
 ## Git workflow
